@@ -4,7 +4,8 @@
   "description": "Social Media app for Developers",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm app.js",
+    "server":"nodemon app.js"
   },
   "author": "RAVI KUMAR V",
   "license": "ISC",
@@ -18,5 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.0",
     "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
