@@ -5,7 +5,7 @@ module.exports = function (req, res, next) {
   const token = req.header("x-auth-token");
 
   if (!token) {
-    return req.status(401).json({ msg: "Token not available" });
+    return res.status(401).json({ msg: "Token not available" });
   }
   try {
     const secretOrPublicKey = config.get("jwtSecret");
@@ -14,6 +14,6 @@ module.exports = function (req, res, next) {
 
     next();
   } catch (error) {
-    return req.status(401).json({ msg: "Token not valid" });
+    return res.status(401).json({ msg: "Token not valid" });
   }
 };

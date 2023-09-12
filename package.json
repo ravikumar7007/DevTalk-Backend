@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "npm app.js",
-    "server":"nodemon app.js"
+    "server": "nodemon app.js"
   },
   "author": "RAVI KUMAR V",
   "license": "ISC",
@@ -18,7 +18,9 @@
     "gravatar": "^1.8.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.0",
-    "request": "^2.88.2"
+    "normalize-url": "^4.5.1",
+    "request": "^2.88.2",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
