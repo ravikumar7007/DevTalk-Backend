@@ -86,11 +86,90 @@ router.get("/", async (req, res) => {
       "name",
       "avatar",
     ]);
-    console.log(profiles);
+
     res.json(profiles);
   } catch (error) {
     console.error(error.message);
     return res.status(500).send("Server Error");
   }
 });
+
+//@route GET api/profile/user/:userid
+
+router.get("/user/:userid", async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.params.userid }).populate(
+      "user",
+      ["name", "avatar"]
+    );
+    if (!profile) {
+      return res.status(500).send("No profile found");
+    }
+
+    res.json(profile);
+  } catch (error) {
+    console.error(error.message);
+    if (error.kind === "ObjectId") {
+      return res.status(500).send("No profile found");
+    }
+    return res.status(500).send("Server Error");
+  }
+});
+
+//@route DELETE api/profile
+
+router.delete("/", auth, async (req, res) => {
+  try {
+    await Profile.findOneAndRemove({ user: req.user.id });
+    await User.findOneAndRemove({ _id: req.user.id });
+
+    res.json({ msg: "User Deleted" });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send("Server Error");
+  }
+});
+
+//@route PUT api/profile/experience
+
+router.put(
+  "/experience",
+  auth,
+  body("title").notEmpty(),
+  body("company").notEmpty(),
+  body("from").notEmpty(),
+  async (req, res) => {
+    const err = validationResult(req);
+    if (!err.isEmpty()) {
+      return res.status(400).json(err);
+    }
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+      await profile.experience.unshift(req.body);
+      await profile.save();
+      res.json(profile);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send("Server Error");
+    }
+  }
+);
+
+//@route PUT api/profile/experience/:expid
+
+router.delete("/experience/:expid", auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id });
+    const removeId = profile.experience
+      .map((exp) => exp.id)
+      .indexOf(req.params.expid);
+    profile.experience.splice(removeId, 1);
+    await profile.save();
+    res.json(profile);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;
