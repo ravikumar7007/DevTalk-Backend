@@ -18,16 +18,14 @@ const PostSchema = new mongoose.Schema({
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
       },
     },
   ],
 
-  commments: [
+  comments: [
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
       },
       text: {
         type: String,
@@ -38,6 +36,10 @@ const PostSchema = new mongoose.Schema({
       },
       avatar: {
         type: String,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
       },
     },
   ],
