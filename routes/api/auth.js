@@ -20,6 +20,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 //@route POST api/users
+
 router.post(
   "/",
   body("email", "email is required").isEmail(),
