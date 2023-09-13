@@ -172,4 +172,47 @@ router.delete("/experience/:expid", auth, async (req, res) => {
   }
 });
 
+//@route PUT api/profile/education
+
+router.put(
+  "/education",
+  auth,
+  body("school").notEmpty(),
+  body("degree").notEmpty(),
+  body("fieldofstudy").notEmpty(),
+  body("from").notEmpty(),
+  async (req, res) => {
+    const err = validationResult(req);
+    if (!err.isEmpty()) {
+      return res.status(400).json(err);
+    }
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+      await profile.education.unshift(req.body);
+      await profile.save();
+      res.json(profile);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send("Server Error");
+    }
+  }
+);
+
+//@route PUT api/profile/education/:eduid
+
+router.delete("/education/:eduid", auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id });
+    const removeId = profile.education
+      .map((exp) => exp.id)
+      .indexOf(req.params.expid);
+    profile.education.splice(removeId, 1);
+    await profile.save();
+    res.json(profile);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;
