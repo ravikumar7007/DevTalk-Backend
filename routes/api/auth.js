@@ -19,7 +19,7 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-//@route POST api/users
+//@route POST api/auth
 
 router.post(
   "/",
