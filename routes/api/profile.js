@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require("../../middleware/auth");
 const Profile = require("../../model/Profile");
 const User = require("../../model/User");
+const Post = require("../../model/Post");
 const axios = require("axios");
 const config = require("config");
 const { body, validationResult } = require("express-validator");
@@ -17,8 +18,9 @@ router.get("/me", auth, async (req, res) => {
       ["name", "avatar"]
     );
     if (!profile) {
-      res.status(400).json({ msg: "There is no profile for this user" });
+      return res.status(400).json({ msg: "There is no profile for this user" });
     }
+
     res.json(profile);
   } catch (error) {
     console.error(error);
@@ -120,6 +122,7 @@ router.get("/user/:userid", async (req, res) => {
 
 router.delete("/", auth, async (req, res) => {
   try {
+    await Post.deleteMany({ user: req.user.id });
     await Profile.findOneAndRemove({ user: req.user.id });
     await User.findOneAndRemove({ _id: req.user.id });
 
@@ -155,7 +158,7 @@ router.put(
   }
 );
 
-//@route PUT api/profile/experience/:expid
+//@route DELETE api/profile/experience/:expid
 
 router.delete("/experience/:expid", auth, async (req, res) => {
   try {
@@ -198,7 +201,7 @@ router.put(
   }
 );
 
-//@route PUT api/profile/education/:eduid
+//@route DELETE api/profile/education/:eduid
 
 router.delete("/education/:eduid", auth, async (req, res) => {
   try {
